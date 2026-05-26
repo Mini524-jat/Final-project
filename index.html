@@ -1,0 +1,1532 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BirthdayFlix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Poppins', sans-serif;
+      background: #050505;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(229, 9, 20, 0.25), transparent 35%),
+        radial-gradient(circle at bottom right, rgba(229, 9, 20, 0.15), transparent 40%),
+        #050505;
+      z-index: -3;
+    }
+
+    .intro {
+      position: fixed;
+      inset: 0;
+      background: #000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 999;
+      animation: hideIntro 4s forwards;
+    }
+
+    .intro h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 14vw, 11rem);
+      color: #e50914;
+      letter-spacing: 8px;
+      text-shadow: 0 0 20px #e50914, 0 0 60px rgba(229, 9, 20, 0.7);
+      transform: scale(0.3);
+      animation: netflixZoom 3.5s ease forwards;
+    }
+
+    @keyframes netflixZoom {
+      0% { transform: scale(0.2); opacity: 0; filter: blur(12px); }
+      35% { opacity: 1; filter: blur(0); }
+      80% { transform: scale(1.08); opacity: 1; }
+      100% { transform: scale(1.2); opacity: 0; }
+    }
+
+    @keyframes hideIntro {
+      0%, 88% { opacity: 1; pointer-events: all; }
+      100% { opacity: 0; pointer-events: none; }
+    }
+
+    nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 18px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.95), transparent);
+      z-index: 50;
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      color: #e50914;
+      font-size: 2.6rem;
+      letter-spacing: 2px;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+      font-size: 0.9rem;
+      color: #ddd;
+    }
+
+    .profile {
+      width: 38px;
+      height: 38px;
+      border-radius: 6px;
+      background: linear-gradient(135deg, #e50914, #8b0000);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+    }
+
+    .hero {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      min-height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      padding: 0 5%;
+      background: #000;
+    }
+
+    .hero-video {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center center;
+      background: #000;
+      z-index: 0;
+      filter: brightness(1.15) saturate(1.1) contrast(1.03);
+      pointer-events: none;
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(to right, rgba(0,0,0,0.88) 0%, rgba(0,0,0,0.48) 42%, rgba(0,0,0,0.12) 100%),
+        linear-gradient(to top, rgba(0,0,0,0.65) 0%, transparent 38%);
+      z-index: 1;
+    }
+
+    .hero-content {
+      max-width: 720px;
+      animation: slideUp 1.2s ease 4s both;
+      position: relative;
+      z-index: 2;
+    }
+
+    .tag {
+      color: #46d369;
+      font-weight: 800;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+    }
+
+    .hero h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(4rem, 11vw, 8rem);
+      line-height: 0.9;
+      letter-spacing: 3px;
+      text-shadow: 0 8px 20px rgba(0,0,0,0.8);
+    }
+
+    .hero p {
+      margin: 22px 0;
+      max-width: 620px;
+      color: #eee;
+      font-size: 1.05rem;
+      line-height: 1.8;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      padding: 13px 26px;
+      font-size: 1rem;
+      font-weight: 700;
+      transition: 0.3s ease;
+    }
+
+    .play {
+      background: white;
+      color: black;
+    }
+
+    .play:hover {
+      transform: scale(1.06);
+      box-shadow: 0 0 24px rgba(255,255,255,0.3);
+    }
+
+    .more {
+      background: rgba(109,109,110,0.75);
+      color: white;
+      backdrop-filter: blur(6px);
+    }
+
+    .more:hover {
+      background: rgba(229,9,20,0.85);
+      transform: scale(1.06);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    section {
+      padding: 25px 5%;
+      position: relative;
+    }
+
+    .section-title {
+      font-size: 1.55rem;
+      margin-bottom: 18px;
+      font-weight: 800;
+    }
+
+    .flip-card {
+      perspective: 1200px;
+      min-height: 290px;
+      cursor: pointer;
+    }
+
+    .flip-inner {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      min-height: 290px;
+      transition: transform 0.7s;
+      transform-style: preserve-3d;
+    }
+
+    .flip-card:hover .flip-inner {
+      transform: rotateY(180deg) translateY(-10px);
+    }
+
+    .flip-front,
+    .flip-back {
+      position: absolute;
+      inset: 0;
+      backface-visibility: hidden;
+      border-radius: 18px;
+      padding: 22px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 0 30px rgba(0,0,0,0.4);
+    }
+
+    .glass-card {
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(255,255,255,0.08);
+      color: white;
+    }
+
+    .red-card { background: linear-gradient(135deg, rgba(229,9,20,0.3), #111); }
+    .blue-card { background: linear-gradient(135deg, rgba(0,120,255,0.25), #111); }
+    .gold-card { background: linear-gradient(135deg, rgba(255,190,0,0.25), #111); }
+    .pink-card { background: linear-gradient(135deg, rgba(255,80,140,0.25), #111); }
+
+    .flip-back {
+      transform: rotateY(180deg);
+      background: linear-gradient(135deg, #181818, #111);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      border: 1px solid rgba(229,9,20,0.25);
+      box-shadow: 0 0 35px rgba(229,9,20,0.15);
+    }
+
+    .lock-icon {
+      font-size: 1.4rem;
+      text-align: right;
+    }
+
+    .progress-circle {
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(#e50914 0deg, #e50914 300deg, rgba(255,255,255,0.1) 300deg);
+      margin-top: 10px;
+    }
+
+    .progress-circle span {
+      width: 52px;
+      height: 52px;
+      background: #111;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      font-size: 0.85rem;
+      font-weight: 700;
+    }
+
+    .row {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 18px;
+    }
+
+    .card {
+      min-height: 280px;
+      border-radius: 10px;
+      overflow: hidden;
+      position: relative;
+      background: #181818;
+      cursor: pointer;
+      transform-style: preserve-3d;
+      transition: 0.4s ease;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+    }
+
+    .netflix-row {
+      perspective: 1200px;
+    }
+
+    .card::before {
+      content: "▶ Watch Now";
+      position: absolute;
+      inset: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: rgba(0,0,0,0.72);
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 700;
+      opacity: 0;
+      transition: 0.35s ease;
+      z-index: 2;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(229,9,20,0.22), transparent);
+      opacity: 0;
+      transition: 0.35s ease;
+      z-index: 1;
+    }
+
+    .card:hover::before,
+    .card:hover::after {
+      opacity: 1;
+    }
+
+    .card:hover {
+      transform: scale(1.07) translateY(-10px);
+      z-index: 4;
+      box-shadow: 0 0 35px rgba(229,9,20,0.35);
+    }
+
+    .featured-card {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .featured-card .episode-meta {
+      position: absolute;
+      top: 12px;
+      right: 12px;
+      background: rgba(0,0,0,0.7);
+      padding: 6px 10px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      z-index: 3;
+      border: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .featured-card .progress-bar {
+      position: absolute;
+      bottom: 108px;
+      left: 12px;
+      right: 12px;
+      height: 4px;
+      background: rgba(255,255,255,0.18);
+      border-radius: 20px;
+      overflow: hidden;
+      z-index: 3;
+    }
+
+    .featured-card .progress-bar span {
+      display: block;
+      height: 100%;
+      background: #e50914;
+      width: 65%;
+      box-shadow: 0 0 10px rgba(229,9,20,0.5);
+      animation: loadBar 3s infinite alternate;
+    }
+
+    @keyframes loadBar {
+      from { width: 35%; }
+      to { width: 90%; }
+    }
+
+    .card img {
+      width: 100%;
+      height: 170px;
+      object-fit: cover;
+      filter: brightness(0.75);
+    }
+
+    .card-content {
+      padding: 14px;
+    }
+
+    .card h3 {
+      font-size: 1.05rem;
+      margin-bottom: 8px;
+    }
+
+    .card p {
+      color: #cfcfcf;
+      font-size: 0.83rem;
+      line-height: 1.5;
+    }
+
+    .badge {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background: #e50914;
+      padding: 5px 9px;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      font-weight: 800;
+    }
+
+    .top10 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 18px;
+    }
+
+    .rank-card {
+      display: flex;
+      align-items: center;
+      background: #111;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      transition: 0.3s;
+    }
+
+    .rank-card:hover {
+      transform: translateY(-8px);
+      border-color: #e50914;
+    }
+
+    .rank {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 5rem;
+      color: transparent;
+      -webkit-text-stroke: 2px #777;
+      padding: 0 18px;
+    }
+
+    .rank-card .text {
+      padding: 16px;
+    }
+
+    .rank-card h3 {
+      margin-bottom: 8px;
+    }
+
+    .rank-card p {
+      color: #bbb;
+      font-size: 0.9rem;
+    }
+
+    .special {
+      margin: 40px 5%;
+      padding: 45px;
+      border-radius: 20px;
+      background:
+        linear-gradient(135deg, rgba(229,9,20,0.9), rgba(20,20,20,0.95)),
+        url('https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=1400&q=80') center/cover;
+      box-shadow: 0 0 45px rgba(229,9,20,0.25);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .special::after {
+      content: "🎈 🎂 ✨ 🎁 ❤️";
+      position: absolute;
+      font-size: 4rem;
+      opacity: 0.12;
+      right: 30px;
+      bottom: 15px;
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .special h2 {
+      font-size: clamp(2rem, 5vw, 4rem);
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 2px;
+      margin-bottom: 15px;
+    }
+
+    .special p {
+      max-width: 760px;
+      line-height: 1.8;
+      color: #fff;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-18px); }
+    }
+
+    .gift-area {
+      text-align: center;
+      padding: 60px 5% 90px;
+    }
+
+    .gift-box {
+      width: 170px;
+      height: 150px;
+      margin: 20px auto;
+      position: relative;
+      cursor: pointer;
+      animation: bounce 1.8s infinite;
+    }
+
+    .gift-box .lid {
+      width: 190px;
+      height: 42px;
+      background: #e50914;
+      border-radius: 8px;
+      position: absolute;
+      top: 0;
+      left: -10px;
+      box-shadow: 0 0 25px rgba(229,9,20,0.6);
+      transition: 0.4s;
+    }
+
+    .gift-box .box {
+      width: 170px;
+      height: 115px;
+      background: linear-gradient(135deg, #b00610, #e50914);
+      border-radius: 8px;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .gift-box .ribbon-v {
+      width: 28px;
+      height: 150px;
+      background: #fff;
+      position: absolute;
+      left: 71px;
+      top: 0;
+    }
+
+    .gift-box .ribbon-h {
+      width: 170px;
+      height: 25px;
+      background: #fff;
+      position: absolute;
+      left: 0;
+      top: 75px;
+    }
+
+    .gift-box:hover .lid {
+      transform: rotate(-14deg) translate(-12px, -35px);
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
+    }
+
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.85);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      padding: 20px;
+    }
+
+    .modal.active {
+      display: flex;
+    }
+
+    .modal-content {
+      max-width: 560px;
+      background: #121212;
+      border: 1px solid rgba(229,9,20,0.5);
+      padding: 35px;
+      border-radius: 18px;
+      text-align: center;
+      box-shadow: 0 0 50px rgba(229,9,20,0.35);
+      animation: pop 0.5s ease;
+    }
+
+    @keyframes pop {
+      from { transform: scale(0.7); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    .modal-content h2 {
+      color: #e50914;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      margin-bottom: 12px;
+    }
+
+    .modal-poster {
+      width: 100%;
+      height: 230px;
+      object-fit: cover;
+      border-radius: 14px;
+      margin-bottom: 16px;
+      box-shadow: 0 0 25px rgba(0,0,0,0.5);
+    }
+
+    .modal-meta {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 15px;
+      color: #ccc;
+      font-size: 0.82rem;
+    }
+
+    .modal-meta span:first-child {
+      color: #46d369;
+      font-weight: 800;
+    }
+
+    .modal-meta span {
+      background: rgba(255,255,255,0.08);
+      padding: 5px 9px;
+      border-radius: 4px;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: 18px;
+    }
+
+    .extra-scene {
+      display: none;
+      margin-top: 22px;
+      padding: 18px;
+      border-radius: 14px;
+      background: rgba(229,9,20,0.12);
+      border: 1px solid rgba(229,9,20,0.35);
+      animation: pop 0.4s ease;
+    }
+
+    .extra-scene.active {
+      display: block;
+    }
+
+    .extra-scene h3 {
+      color: #e50914;
+      margin-bottom: 8px;
+    }
+
+    .modal-content p {
+      color: #ddd;
+      line-height: 1.8;
+      margin-bottom: 20px;
+    }
+
+    .close {
+      background: #e50914;
+      color: white;
+    }
+
+    .hearts span {
+      position: fixed;
+      bottom: -50px;
+      color: #e50914;
+      animation: rise 8s linear infinite;
+      opacity: 0.75;
+      z-index: -1;
+    }
+
+    @keyframes rise {
+      from { transform: translateY(0) rotate(0); opacity: 0; }
+      20% { opacity: 0.8; }
+      to { transform: translateY(-110vh) rotate(360deg); opacity: 0; }
+    }
+
+    .voice-note-section {
+      padding: 70px 5%;
+      text-align: center;
+    }
+
+    .voice-text {
+      color: #bbb;
+      margin-bottom: 25px;
+    }
+
+    .voice-card {
+      max-width: 500px;
+      margin: auto;
+      background: #111;
+      padding: 35px;
+      border-radius: 20px;
+      border: 1px solid rgba(229,9,20,0.35);
+      box-shadow: 0 0 35px rgba(229,9,20,0.15);
+      transition: 0.3s ease;
+    }
+
+    .voice-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 0 45px rgba(229,9,20,0.3);
+    }
+
+    .cassette {
+      font-size: 4rem;
+      margin-bottom: 15px;
+      animation: bounce 2s infinite;
+    }
+
+    .voice-card h3 {
+      margin-bottom: 15px;
+    }
+
+    .voice-card audio {
+      width: 100%;
+      margin: 18px 0;
+      filter: invert(1) contrast(1.1);
+    }
+
+    .voice-card p {
+      color: #aaa;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .music-btn {
+      position: fixed;
+      right: 22px;
+      bottom: 22px;
+      z-index: 80;
+      background: #e50914;
+      color: white;
+      border-radius: 50px;
+      box-shadow: 0 0 25px rgba(229,9,20,0.55);
+    }
+
+    .countdown-section, .secret-section, .wishes-wall {
+      text-align: center;
+      padding: 55px 5%;
+    }
+
+    .countdown {
+      display: flex;
+      justify-content: center;
+      gap: 18px;
+      flex-wrap: wrap;
+    }
+
+    .countdown div {
+      background: #111;
+      border: 1px solid rgba(229,9,20,0.35);
+      border-radius: 14px;
+      width: 130px;
+      padding: 22px 10px;
+      box-shadow: 0 0 28px rgba(229,9,20,0.12);
+    }
+
+    .countdown span {
+      font-family: 'Bebas Neue', sans-serif;
+      color: #e50914;
+      font-size: 3.2rem;
+    }
+
+    .countdown p { color: #bbb; }
+
+    .wish-cloud {
+      min-height: 220px;
+      max-width: 900px;
+      margin: auto;
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+      background: radial-gradient(circle, rgba(229,9,20,0.15), #101010);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    .wish-cloud span {
+      position: absolute;
+      color: white;
+      background: rgba(229,9,20,0.22);
+      padding: 10px 16px;
+      border-radius: 30px;
+      animation: wishFloat 8s infinite ease-in-out;
+    }
+
+    .wish-cloud span:nth-child(1){ left:8%; top:18%; }
+    .wish-cloud span:nth-child(2){ left:55%; top:12%; animation-delay:1s; }
+    .wish-cloud span:nth-child(3){ left:30%; top:45%; animation-delay:2s; }
+    .wish-cloud span:nth-child(4){ left:62%; top:60%; animation-delay:3s; }
+    .wish-cloud span:nth-child(5){ left:10%; top:70%; animation-delay:1.8s; }
+    .wish-cloud span:nth-child(6){ left:45%; top:78%; animation-delay:2.5s; }
+
+    @keyframes wishFloat {
+      0%,100% { transform: translateY(0) scale(1); opacity: 0.75; }
+      50% { transform: translateY(-22px) scale(1.05); opacity: 1; }
+    }
+
+    .secret-box {
+      max-width: 520px;
+      margin: auto;
+      background: #111;
+      padding: 28px;
+      border-radius: 18px;
+      border: 1px solid rgba(229,9,20,0.35);
+    }
+
+    .secret-box input {
+      width: 100%;
+      padding: 14px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 14px;
+      background: #222;
+      color: white;
+      outline: none;
+    }
+
+    .secret-box button {
+      background: #e50914;
+      color: white;
+    }
+
+    #secretMsg {
+      margin-top: 18px;
+      color: #ddd;
+      line-height: 1.7;
+    }
+
+    .credits-section {
+      margin: 50px 5%;
+      padding: 50px 20px;
+      text-align: center;
+      border-radius: 20px;
+      background: linear-gradient(180deg, #111, #050505);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 0 35px rgba(229,9,20,0.15);
+    }
+
+    .credits-section h2 {
+      font-family: 'Bebas Neue', sans-serif;
+      color: #e50914;
+      font-size: 4rem;
+      margin-bottom: 20px;
+    }
+
+    .credits-section p {
+      color: #ddd;
+      font-size: 1.1rem;
+      margin: 10px 0;
+      animation: creditGlow 3s infinite;
+    }
+
+    @keyframes creditGlow {
+      0%,100% { opacity: 0.65; }
+      50% { opacity: 1; }
+    }
+
+    .trailer-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.9);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 500;
+      padding: 20px;
+    }
+
+    .trailer-modal.active { display: flex; }
+
+    .trailer-box {
+      max-width: 760px;
+      background: #111;
+      padding: 28px;
+      border-radius: 18px;
+      border: 1px solid rgba(229,9,20,0.45);
+      box-shadow: 0 0 45px rgba(229,9,20,0.35);
+      text-align: center;
+    }
+
+    .trailer-box h2 {
+      color: #e50914;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .trailer-box p {
+      color: #ccc;
+      margin-bottom: 18px;
+      line-height: 1.7;
+    }
+
+    .trailer-box video {
+      width: 100%;
+      border-radius: 12px;
+      margin-bottom: 18px;
+      max-height: 380px;
+      object-fit: cover;
+    }
+
+    .loader {
+      animation: loaderFade 2s ease forwards;
+      position: fixed;
+      inset: 0;
+      background: #050505;
+      z-index: 3000;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: 0.7s;
+    }
+
+    @keyframes loaderFade {
+      0%, 75% { opacity: 1; }
+      100% { opacity: 0; pointer-events: none; }
+    }
+
+    .loader h1 {
+      color: #e50914;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2rem, 6vw, 5rem);
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0%,100% { transform: scale(1); }
+      50% { transform: scale(1.08); }
+    }
+
+    .skip-intro {
+      position: fixed;
+      top: 95px;
+      right: 20px;
+      z-index: 90;
+      background: rgba(255,255,255,0.1);
+      color: white;
+      backdrop-filter: blur(6px);
+      border-radius: 30px;
+    }
+
+    .notify {
+      position: fixed;
+      top: 22px;
+      right: -400px;
+      z-index: 150;
+      background: #111;
+      color: white;
+      padding: 14px 18px;
+      border-left: 4px solid #e50914;
+      border-radius: 10px;
+      box-shadow: 0 0 25px rgba(229,9,20,0.2);
+      transition: 0.7s;
+    }
+
+    .notify.show { right: 20px; }
+
+    .chat-popup {
+      position: fixed;
+      left: 20px;
+      bottom: 90px;
+      background: #111;
+      color: white;
+      padding: 14px 18px;
+      border-radius: 40px;
+      border: 1px solid rgba(229,9,20,0.35);
+      box-shadow: 0 0 25px rgba(229,9,20,0.15);
+      z-index: 90;
+      cursor: pointer;
+      animation: bounce 2.5s infinite;
+    }
+
+    .scratch-section, .quiz-section {
+      padding: 60px 5%;
+      text-align: center;
+    }
+
+    
+
+    .scratch-card {
+      max-width: 520px;
+      margin: auto;
+      height: 170px;
+      display: grid;
+      place-items: center;
+      border-radius: 20px;
+      background: linear-gradient(135deg, #666, #ddd);
+      color: black;
+      font-weight: 800;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 0 35px rgba(255,255,255,0.12);
+    }
+
+    .quiz-box {
+      max-width: 500px;
+      margin: auto;
+      background: #111;
+      padding: 30px;
+      border-radius: 20px;
+      border: 1px solid rgba(229,9,20,0.35);
+    }
+
+    .quiz-box button {
+      margin: 8px;
+      background: #e50914;
+      color: white;
+    }
+
+    #quizResult {
+      margin-top: 16px;
+      color: #ddd;
+    }
+
+    footer {
+      text-align: center;
+      padding: 35px 20px;
+      color: #999;
+      background: #050505;
+      border-top: 1px solid rgba(255,255,255,0.08);
+    }
+
+    @media (max-width: 720px) {
+      .nav-links { display: none; }
+      .hero {
+        padding: 120px 5% 60px;
+        align-items: center;
+      }
+      .hero-video {
+        object-fit: cover;
+        object-position: center center;
+      }
+      .buttons button { width: 100%; }
+      .special { padding: 30px 22px; }
+      .rank { font-size: 4rem; }
+    }
+  </style>
+</head>
+<body>
+  <button class="music-btn" onclick="toggleMusic()">♫ Music</button>
+  <audio id="bgMusic" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+  </audio>
+  <div class="intro">
+    <h1>BIRTHDAYFLIX</h1>
+  </div>
+
+  <div class="hearts" id="hearts"></div>
+
+  <div class="loader" id="loader">
+    <h1>Loading Birthday Experience...</h1>
+  </div>
+
+  <div class="notify" id="notify">🔔 New Birthday Surprise Added</div>
+
+  <div class="chat-popup" id="chatPopup" onclick="openChatMessage()">
+    💬 Someone sent you a surprise...
+  </div>
+
+  <button class="skip-intro" onclick="scrollToSection('episodes')">Skip Intro</button>
+
+  <nav>
+    <div class="logo">BIRTHDAYFLIX</div>
+    <div class="nav-links">
+      <span>Home</span>
+      <span>Memories</span>
+      <span>Surprises</span>
+      <span>My List</span>
+    </div>
+    <div class="profile">❤</div>
+  </nav>
+
+  <header class="hero">
+    <video class="hero-video" autoplay muted loop playsinline>
+      <source src="video_2026-05-26_11-51-00.mp4" type="video/mp4">
+    </video>
+    <div class="hero-content">
+      <div class="tag">#1 Birthday Special Today</div>
+      <h2>Happy Birthday<br>To You</h2>
+      <p>
+        Today is not just another day. It is the release date of the most beautiful story — your life.
+        This little website is a birthday movie made with memories, love, surprises, and all the little moments that make you special.
+      </p>
+      <div class="buttons">
+        <button class="play" onclick="scrollToSection('episodes')">▶ Play Surprise</button>
+        <button class="more" onclick="openTrailer()">🎬 Watch Trailer</button>
+        <button class="more" onclick="openModal()">ⓘ More Info</button>
+      </div>
+    </div>
+  </header>
+
+  <section class="countdown-section">
+    <h2 class="section-title">Birthday Countdown</h2>
+    <div class="countdown" id="countdown">
+      <div><span id="days">00</span><p>Days</p></div>
+      <div><span id="hours">00</span><p>Hours</p></div>
+      <div><span id="mins">00</span><p>Minutes</p></div>
+      <div><span id="secs">00</span><p>Seconds</p></div>
+    </div>
+  </section>
+
+  <section id="episodes">
+    <h2 class="section-title">Birthday Episodes</h2>
+    <div class="row netflix-row" id="episodeRow">
+
+      <div class="flip-card" onclick="openModal('Episode 1: Birthday Glow', 'Some smiles stay in memory forever ❤️')">
+        <div class="flip-inner">
+          <div class="flip-front glass-card red-card">
+            <span class="badge">NEW</span>
+            <div class="lock-icon">🔓</div>
+            <h3>Ep 1: Birthday Glow</h3>
+            <p>Hover to reveal surprise</p>
+            <div class="progress-circle"><span>92%</span></div>
+          </div>
+          <div class="flip-back">
+            <h3>Hidden Memory ❤️</h3>
+            <p>Your smile made ordinary moments feel warm.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card" onclick="openModal('Episode 2: Memory Lane', 'Beautiful little memories never fade ✨')">
+        <div class="flip-inner">
+          <div class="flip-front glass-card blue-card">
+            <span class="badge">TOP PICK</span>
+            <div class="lock-icon">🔓</div>
+            <h3>Ep 2: Memory Lane</h3>
+            <p>Hover to reveal surprise</p>
+            <div class="progress-circle"><span>98%</span></div>
+          </div>
+          <div class="flip-back">
+            <h3>Saved Forever 📸</h3>
+            <p>Some people become reasons behind happy memories.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card" onclick="openModal('Episode 3: Secret Gift', 'Special surprises are hidden here 🎁')">
+        <div class="flip-inner">
+          <div class="flip-front glass-card gold-card">
+            <span class="badge">LOCKED</span>
+            <div class="lock-icon">🔒</div>
+            <h3>Ep 3: Secret Gift</h3>
+            <p>Click to unlock</p>
+            <div class="progress-circle"><span>75%</span></div>
+          </div>
+          <div class="flip-back">
+            <h3>Gift Unlocked 🎁</h3>
+            <p>You deserve endless happiness.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="flip-card" onclick="openModal('Episode 4: Cake Scene', 'The sweetest moment of this day 🎂')">
+        <div class="flip-inner">
+          <div class="flip-front glass-card pink-card">
+            <span class="badge">TRENDING</span>
+            <div class="lock-icon">🔓</div>
+            <h3>Ep 4: Cake Scene</h3>
+            <p>Hover to reveal surprise</p>
+            <div class="progress-circle"><span>88%</span></div>
+          </div>
+          <div class="flip-back">
+            <h3>Make A Wish ✨</h3>
+            <p>May every dream come true beautifully.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section>
+    <h2 class="section-title">Top 5 Reasons You Are Special</h2>
+    <div class="top10">
+      <div class="rank-card">
+        <div class="rank">1</div>
+        <div class="text"><h3>Your Heart</h3><p>You care deeply, even when you do not always say it out loud.</p></div>
+      </div>
+      <div class="rank-card">
+        <div class="rank">2</div>
+        <div class="text"><h3></h3><p></p></div>
+      </div>
+      <div class="rank-card">
+        <div class="rank">3</div>
+        <div class="text"><h3>Your Vibe</h3><p>You make simple moments feel beautiful.</p></div>
+      </div>
+      <div class="rank-card">
+        <div class="rank">4</div>
+        <div class="text"><h3>Your Strength</h3><p>You keep going, even when life feels heavy.</p></div>
+      </div>
+      <div class="rank-card">
+        <div class="rank">5</div>
+        <div class="text"><h3>Your Presence</h3><p>Having you around feels like comfort.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="special">
+    <h2>Birthday Original: Made With Love</h2>
+    <p>
+      On this birthday, I just want you to know that you are more special than you realize.
+      May this year bring you soft days, big smiles, peaceful nights, true people, and all the success your heart is silently wishing for.
+      You deserve happiness that feels real, love that stays, and moments that make you feel deeply valued.
+    </p>
+  </div>
+
+  <section>
+    <h2 class="section-title">Continue Watching Memories</h2>
+    <div class="row">
+      <div class="card">
+        <span class="badge">PHOTO</span>
+        <img src="photo_2026-05-12_16-59-29.jpg" alt="friends">
+        <div class="card-content">
+          <h3>🎬</h3>
+        </div>
+      </div>
+      <div class="card">
+        <span class="badge">PHOTO</span>
+        <img src="photo_2026-05-12_17-33-23.jpg" alt="balloons">
+        <div class="card-content">
+             <h3>🎬</h3>
+        </div>
+      </div>
+      <div class="card">
+        <span class="badge">PHOTO</span>
+        <img src="photo_2026-05-12_16-59-27.jpg" alt="party">
+        <div class="card-content">
+          <h3>🎬</h3>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="wishes-wall">
+    <h2 class="section-title">Live Wishes Wall</h2>
+    <div class="wish-cloud">
+      <span>Stay happy always ❤️</span>
+      <span>You are so special ✨</span>
+      <span>Best birthday ever 🎂</span>
+      <span>More smiles, less worries 🌙</span>
+      <span>Keep glowing always 🌟</span>
+    </div>
+  </section>
+
+  <section class="scratch-section">
+    <h2 class="section-title">Scratch Birthday Card 🎁</h2>
+    <div class="scratch-card" onclick="scratchGift()">
+      <span id="scratchText">Scratch To Reveal Surprise ✨</span>
+    </div>
+  </section>
+
+  <section class="secret-section">
+    <h2 class="section-title">Locked Birthday Gift 🔐</h2>
+    <p class="voice-text">Enter password: <b>birthday</b></p>
+    <div class="secret-box">
+      <input id="secretInput" placeholder="Enter secret password">
+      <button onclick="unlockSecret()">Unlock</button>
+      <p id="secretMsg"></p>
+    </div>
+  </section>
+
+  <div class="gift-area">
+    <h2 class="section-title">Click The Gift Box</h2>
+    <p style="color:#bbb; max-width:620px; margin:0 auto; line-height:1.7;">
+      A birthday surprise is waiting inside. Click the gift and open your secret message.
+    </p>
+    <div class="gift-box" onclick="openModal('Surprise Unlocked 🎁', ' Happy Birthday Nivi ❤️ You are such a special part of my life, and thank you for always standing by me through all my ups and downs. No matter what happens,I’ll always be there for you because you are not just my friend,you are my comfort and like family to me.')">
+      <div class="lid"></div>
+      <div class="box"></div>
+      <div class="ribbon-v"></div>
+      <div class="ribbon-h"></div>
+    </div>
+  </div>
+
+  <section class="quiz-section">
+    <h2 class="section-title">Birthday Quiz 🎉</h2>
+    <div class="quiz-box">
+      <p>How special is today?</p>
+      <button onclick="quizAnswer(true)">Very Special ❤️</button>
+      <button onclick="quizAnswer(false)">Normal Day 😅</button>
+      <p id="quizResult"></p>
+    </div>
+  </section>
+
+  <section class="credits-section">
+    <h2>Final Credits</h2>
+    <p>Directed by Love ❤️</p>
+    <p>Produced by Memories ✨</p>
+    <p>Written by Every Beautiful Moment</p>
+    <p>Starring: The Birthday Star 🎂</p>
+  </section>
+
+  <section class="voice-note-section">
+    <h2 class="section-title">Last Surprise – Voice Note ❤️</h2>
+    <p class="voice-text">Press play and hear a special message.</p>
+
+    <div class="voice-card">
+      <div class="cassette">📼</div>
+      <h3>Birthday Voice Note</h3>
+      <audio controls>
+        <source src="AUDIO-2026-05-03-17-35-14.m4a" type="audio/mpeg">
+      </audio>
+    </div>
+  </section>
+
+  <footer>
+    Made with love for the birthday star ❤️ | BirthdayFlix Original
+  </footer>
+
+  <div class="trailer-modal" id="trailerModal">
+    <div class="trailer-box">
+      <h2>Your Life: Birthday Trailer</h2>
+      <p>In a world full of ordinary days, one person made everything feel warmer, softer, and more beautiful.</p>
+      <video controls autoplay muted loop>
+        <source src="video_2026-05-26_20-40-03.mp4" type="video/mp4">
+      </video>
+      <button class="close" onclick="closeTrailer()">Close Trailer</button>
+    </div>
+  </div>
+
+  <div class="modal" id="modal">
+    <div class="modal-content">
+      <h2 id="modalTitle">About This Birthday Special</h2>
+      <img id="modalPoster" class="modal-poster" src="photo_2026-05-26_20-19-43.jpg" alt="Episode Poster">
+      <div class="modal-meta">
+        <span>2026</span>
+        <span>HD</span>
+        <span>Birthday Special</span>
+      </div>
+      <p id="modalText">
+        This is a Netflix-style birthday surprise website filled with memories, emotions, and cute little moments made only for someone special.
+      </p>
+      <div class="modal-actions">
+        <button class="play" onclick="confettiBurst()">▶ Play Moment</button>
+        <button class="more" onclick="showExtraScene()">🎁 Bonus Scene</button>
+        <button class="close" onclick="closeModal()">Close</button>
+      </div>
+      <div class="extra-scene" id="extraScene">
+        <h3>Bonus Scene Unlocked ❤️</h3>
+        <p>This moment is saved forever because people like you make life feel softer, warmer, and more beautiful.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function toggleMusic() {
+      const music = document.getElementById('bgMusic');
+      if (music.paused) music.play();
+      else music.pause();
+    }
+
+    function openTrailer() {
+      document.getElementById('trailerModal').classList.add('active');
+      confettiBurst();
+    }
+
+    function closeTrailer() {
+      document.getElementById('trailerModal').classList.remove('active');
+    }
+
+    function unlockSecret() {
+      const value = document.getElementById('secretInput').value.trim().toLowerCase();
+      const msg = document.getElementById('secretMsg');
+      if (value === 'birthday') {
+        msg.innerHTML = 'Unlocked ❤️<br>You are not just special today, you are special every day. May this year give you the kind of happiness that stays quietly in your heart forever.';
+        confettiBurst();
+      } else {
+        msg.innerText = 'Wrong password 😭 Hint: birthday';
+      }
+    }
+
+   function updateCountdown() {
+  const now = new Date();
+  let target = new Date("2026-05-27T00:00:00"); // 27th
+
+  const diff = target - now;
+
+  document.getElementById('days').innerText =
+    String(Math.floor(diff / (1000 * 60 * 60 * 24))).padStart(2, '0');
+
+  document.getElementById('hours').innerText =
+    String(Math.floor((diff / (1000 * 60 * 60)) % 24)).padStart(2, '0');
+
+  document.getElementById('mins').innerText =
+    String(Math.floor((diff / (1000 * 60)) % 60)).padStart(2, '0');
+
+  document.getElementById('secs').innerText =
+    String(Math.floor((diff / 1000) % 60)).padStart(2, '0');
+}
+
+    setInterval(updateCountdown, 1000);
+
+    window.addEventListener('load', () => {
+      const loader = document.getElementById('loader');
+      setTimeout(() => {
+        if (loader) loader.style.display = 'none';
+      }, 1800);
+
+      setTimeout(() => {
+        const notify = document.getElementById('notify');
+        if (notify) notify.classList.add('show');
+      }, 2200);
+    });
+
+    setInterval(() => {
+      const row = document.getElementById('episodeRow');
+      if (row) row.scrollBy({ left: 260, behavior: 'smooth' });
+    }, 3500);
+
+    window.addEventListener('scroll', () => {
+      if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight - 120) {
+        confettiBurst();
+      }
+    });
+
+    let logoClicks = 0;
+    document.addEventListener('DOMContentLoaded', () => {
+      const logo = document.querySelector('.logo');
+      if (logo) {
+        logo.addEventListener('click', () => {
+          logoClicks++;
+          if (logoClicks === 3) {
+            openModal('Hidden Easter Egg 🥚', 'You unlocked a secret surprise. Some special things are hidden, just like beautiful memories.', 'https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=900&q=80');
+            logoClicks = 0;
+          }
+        });
+      }
+    });
+
+    function scratchGift() {
+      document.getElementById('scratchText').innerHTML = '🎁 Surprise Unlocked: May this year bring you happiness, peace, success, and endless smiles 🎂✨';
+      confettiBurst();
+    }
+
+    function quizAnswer(correct) {
+      document.getElementById('quizResult').innerText = correct ? 'Correct ❤️ Today is extremely special!' : 'Nooo 😭 Today is not normal. It is magical!';
+      confettiBurst();
+    }
+
+    function openChatMessage() {
+      openModal('New Surprise Message 💬', 'Someone wants you to know that your smile, your kindness, and your presence make life feel brighter. Never forget how special you are.');
+    }
+    updateCountdown();
+
+    function scrollToSection(id) {
+      document.getElementById(id).scrollIntoView({ behavior: 'smooth' });
+    }
+
+    function openModal(title, text, poster) {
+      document.getElementById('modalTitle').innerText = title || 'About This Birthday Special';
+      document.getElementById('modalText').innerText = text || 'This is a Netflix-style birthday surprise website filled with memories, emotions, and cute little moments made only for someone special.';
+      document.getElementById('modalPoster').src = poster || 'photo_2026-05-26_20-19-43.jpg';
+      document.getElementById('extraScene').classList.remove('active');
+      document.getElementById('modal').classList.add('active');
+      confettiBurst();
+    }
+
+    function showExtraScene() {
+      document.getElementById('extraScene').classList.add('active');
+      confettiBurst();
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.remove('active');
+    }
+
+    const hearts = document.getElementById('hearts');
+    for (let i = 0; i < 35; i++) {
+      const span = document.createElement('span');
+      span.innerHTML = Math.random() > 0.5 ? '❤' : '✨';
+      span.style.left = Math.random() * 100 + 'vw';
+      span.style.fontSize = Math.random() * 18 + 12 + 'px';
+      span.style.animationDelay = Math.random() * 8 + 's';
+      span.style.animationDuration = Math.random() * 5 + 6 + 's';
+      hearts.appendChild(span);
+    }
+
+    function confettiBurst() {
+      for (let i = 0; i < 45; i++) {
+        const confetti = document.createElement('div');
+        confetti.style.position = 'fixed';
+        confetti.style.left = '50%';
+        confetti.style.top = '50%';
+        confetti.style.width = '8px';
+        confetti.style.height = '12px';
+        confetti.style.background = ['#e50914', '#ffffff', '#ffcc00', '#ff4d6d'][Math.floor(Math.random() * 4)];
+        confetti.style.zIndex = '200';
+        confetti.style.borderRadius = '2px';
+        confetti.style.pointerEvents = 'none';
+        document.body.appendChild(confetti);
+
+        const x = (Math.random() - 0.5) * 600;
+        const y = (Math.random() - 0.5) * 500;
+        const rotate = Math.random() * 720;
+
+        confetti.animate([
+          { transform: 'translate(0, 0) rotate(0deg)', opacity: 1 },
+          { transform: `translate(${x}px, ${y}px) rotate(${rotate}deg)`, opacity: 0 }
+        ], {
+          duration: 1200 + Math.random() * 800,
+          easing: 'ease-out'
+        });
+
+        setTimeout(() => confetti.remove(), 2100);
+      }
+    }
+  </script>
+</body>
+</html>
